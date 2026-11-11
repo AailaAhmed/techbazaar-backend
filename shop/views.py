@@ -12,3 +12,13 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
     filterset_fields = ["category__slug"]
     search_fields = ["title", "brand"]
     ordering_fields = ["price", "rating", "discount_percentage"]
+
+
+from rest_framework import mixins
+from .models import Order
+from .serializers import OrderSerializer
+
+
+class OrderViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+    queryset = Order.objects.prefetch_related("items__product")
+    serializer_class = OrderSerializer
